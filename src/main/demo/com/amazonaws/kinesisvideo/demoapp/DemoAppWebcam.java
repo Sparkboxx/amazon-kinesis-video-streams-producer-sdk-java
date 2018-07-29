@@ -12,7 +12,7 @@ import com.amazonaws.regions.Regions;
 /**
  * Demo Java Producer.
  */
-public final class DemoAppMain {
+public final class DemoAppWebcam {
     private static final String STREAM_NAME = "remotebox";
     private static final int FPS_25 = 25;
     private static final String IMAGE_DIR = "src/main/resources/data/h264/";
@@ -23,7 +23,7 @@ public final class DemoAppMain {
     private static final int START_FILE_INDEX = 1;
     private static final int END_FILE_INDEX = 375;
 
-    private DemoAppMain() {
+    private DemoAppWebcam() {
         throw new UnsupportedOperationException();
     }
 
@@ -37,7 +37,8 @@ public final class DemoAppMain {
 
             // create a media source. this class produces the data and pushes it into
             // Kinesis Video Producer lower level components
-            final MediaSource bytesMediaSource = createImageFileMediaSource();
+            // final MediaSource bytesMediaSource = createImageFileMediaSource();
+            final MediaSource bytesMediaSource = createCameraMediaSource();
 
             // register media source with Kinesis Video Client
             kinesisVideoClient.registerMediaSource(STREAM_NAME, bytesMediaSource);
@@ -67,5 +68,37 @@ public final class DemoAppMain {
         mediaSource.configure(configuration);
 
         return mediaSource;
+    }
+
+    private static MediaSource createCameraMediaSource() {
+    	
+    	Webcam webcam = Webcam.getDefault();
+    	
+    	byte[] cpd = { 0x01, 0x42, 0x00, 0x20, (byte) 0xff, (byte) 0xe1, 0x00, 0x23, 0x27, 0x42, 0x00, 0x20, 
+    			(byte) 0x89, (byte) 0x8b, 0x60, 0x28, 0x02, (byte) 0xdd, (byte) 0x80, (byte) 0x9e, 0x00, 0x00, 
+    			0x4e, 0x20, 0x00, 0x0f, 0x42, 0x41, (byte) 0xc0, (byte) 0xc0, 0x01, 0x77, 0x00, 0x00, 0x5d, 
+    			(byte) 0xc1, 0x7b, (byte) 0xdf, 0x07, (byte) 0xc2, 0x21, 0x1b, (byte) 0x80, 0x01, 0x00, 0x04, 
+    			0x28, (byte) 0xce, 0x1f, 0x20 };
+
+    	
+		final CameraMediaSourceConfiguration configuration =
+    			new CameraMediaSourceConfiguration.Builder()
+    			.withFrameRate(FPS_19)
+    			.withRetentionPeriodInHours(1)
+    			.withCameraId("/dev/video0")
+    			.withIsEncoderHardwareAccelerated(false)
+    			.withEncodingMimeType("video/avc")
+    			.withNalAdaptationFlags(StreamInfo.NalAdaptationFlags.NAL_ADAPTATION_FLAG_NONE)
+    			.withIsAbsoluteTimecode(false)
+    			.withEncodingBitRate(200000)
+    			.withHorizontalResolution(640)
+    			.withVerticalResolution(480)
+    			.withCodecPrivateData(cpd)
+    			.build();
+    	
+    	final CameraMediaSource mediaSource = new CameraMediaSource();
+    	mediaSource.setupWebCam(webcam);
+    	mediaSource.configure(configuration);
+    	return mediaSource;    	
     }
 }
