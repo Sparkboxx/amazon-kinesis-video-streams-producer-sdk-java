@@ -1,5 +1,29 @@
 package com.amazonaws.kinesisvideo.java.mediasource.camera;
 
+import static com.amazonaws.kinesisvideo.producer.StreamInfo.NalAdaptationFlags.NAL_ADAPTATION_FLAG_NONE;
+import static com.amazonaws.kinesisvideo.producer.Time.HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
+import static com.amazonaws.kinesisvideo.producer.Time.HUNDREDS_OF_NANOS_IN_A_SECOND;
+import static com.amazonaws.kinesisvideo.producer.Time.HUNDREDS_OF_NANOS_IN_AN_HOUR;
+import static com.amazonaws.kinesisvideo.producer.Time.NANOS_IN_A_TIME_UNIT;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.DEFAULT_BITRATE;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.DEFAULT_BUFFER_DURATION_IN_SECONDS;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.DEFAULT_GOP_DURATION;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.DEFAULT_REPLAY_DURATION_IN_SECONDS;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.DEFAULT_STALENESS_DURATION_IN_SECONDS;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.DEFAULT_TIMESCALE;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.KEYFRAME_FRAGMENTATION;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.MAX_LATENCY_ZERO;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.NOT_ADAPTIVE;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.NO_KMS_KEY_ID;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.RECALCULATE_METRICS;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.RECOVER_ON_FAILURE;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.RELATIVE_TIMECODES;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.REQUEST_FRAGMENT_ACKS;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.RETENTION_ONE_HOUR;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.USE_FRAME_TIMECODES;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.VERSION_ZERO;
+import static com.amazonaws.kinesisvideo.util.StreamInfoConstants.SDK_GENERATES_TIMECODES;
+
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSource;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceConfiguration;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceSink;
@@ -10,6 +34,9 @@ import com.amazonaws.kinesisvideo.java.mediasource.file.ImageFileMediaSourceConf
 import com.amazonaws.kinesisvideo.java.mediasource.file.ImageFrameSource;
 import com.amazonaws.kinesisvideo.mediasource.OnFrameDataAvailable;
 import com.amazonaws.kinesisvideo.producer.KinesisVideoFrame;
+import com.amazonaws.kinesisvideo.producer.StreamInfo;
+import com.amazonaws.kinesisvideo.producer.Tag;
+
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
 
@@ -62,13 +89,13 @@ public class CameraMediaSource implements MediaSource {
 	}
 
 	@Override
-	public void configure(MediaSourceConfiguration configuration) {
+	public void configure(MediaSourceConfiguration cameraMediaSourceConfiguration) {
 		// TODO Auto-generated method stub
 		
-		if (!(configuration instanceof CameraMediaSourceConfiguration)) {
+		if (!(cameraMediaSourceConfiguration instanceof CameraMediaSourceConfiguration)) {
             throw new IllegalStateException("Configuration must be an instance of OpenCvMediaSourceConfiguration");
         }
-        this.cameraMediaSourceConfiguration = (CameraMediaSourceConfiguration) configuration;
+        this.cameraMediaSourceConfiguration = (CameraMediaSourceConfiguration) cameraMediaSourceConfiguration;
         this.frameIndex = 0;
 		
 	}
@@ -157,5 +184,37 @@ public class CameraMediaSource implements MediaSource {
     @Override
     public MediaSourceSink getMediaSourceSink() {
         return mediaSourceSink;
+    }
+
+    @Override
+    public StreamInfo getStreamInfo(final String streamName) {      
+        return new StreamInfo(VERSION_ZERO,
+                streamName,
+                StreamInfo.StreamingType.STREAMING_TYPE_REALTIME,
+                contentType,
+                NO_KMS_KEY_ID,
+                cameraMediaSourceConfiguration.getRetentionPeriodInHours() * HUNDREDS_OF_NANOS_IN_AN_HOUR,
+                NOT_ADAPTIVE,
+                MAX_LATENCY_ZERO,
+                DEFAULT_GOP_DURATION * HUNDREDS_OF_NANOS_IN_A_MILLISECOND,
+                KEYFRAME_FRAGMENTATION,
+                SDK_GENERATES_TIMECODES,
+                cameraMediaSourceConfiguration.getIsAbsoluteTimecode(),
+                REQUEST_FRAGMENT_ACKS,
+                RECOVER_ON_FAILURE,
+                StreamInfo.codecIdFromContentType(cameraMediaSourceConfiguration.getEncoderMimeType()),
+                StreamInfo.createTrackName(cameraMediaSourceConfiguration.getEncoderMimeType()),
+                cameraMediaSourceConfiguration.getBitRate(),
+                cameraMediaSourceConfiguration.getFrameRate(),
+                DEFAULT_BUFFER_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
+                DEFAULT_REPLAY_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
+                DEFAULT_STALENESS_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
+                cameraMediaSourceConfiguration.getTimeScale() / NANOS_IN_A_TIME_UNIT,
+                RECALCULATE_METRICS,
+                cameraMediaSourceConfiguration.getCodecPrivateData(),
+                new Tag[] {
+                    new Tag("device", "Test Device"),
+                    new Tag("stream", "Test Stream") },
+                cameraMediaSourceConfiguration.getNalAdaptationFlags());
     }
 }
