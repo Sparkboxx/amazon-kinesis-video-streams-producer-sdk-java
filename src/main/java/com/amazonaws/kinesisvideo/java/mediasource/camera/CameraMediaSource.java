@@ -154,4 +154,8 @@ public class CameraMediaSource implements MediaSource {
 		
 	}
 
+    @Override
+    public MediaSourceSink getMediaSourceSink() {
+        return mediaSourceSink;
+    }
 }

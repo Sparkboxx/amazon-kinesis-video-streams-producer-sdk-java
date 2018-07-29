@@ -22,7 +22,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.kinesisvideo.client.KinesisVideoClient;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSource;
-import com.amazonaws.kinesisvideo.client.mediasource.t MediaSourceState;
+import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceState;
 import com.amazonaws.kinesisvideo.common.exception.KinesisVideoException;
 import com.amazonaws.kinesisvideo.demoapp.auth.AuthHelper;
 import com.amazonaws.kinesisvideo.java.client.KinesisVideoJavaClientFactory;
