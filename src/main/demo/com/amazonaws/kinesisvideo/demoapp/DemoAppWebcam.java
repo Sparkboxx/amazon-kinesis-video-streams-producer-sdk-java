@@ -1,5 +1,11 @@
 package com.amazonaws.kinesisvideo.demoapp;
 
+import java.awt.Dimension;
+import org.jcodec.codecs.h264.H264Encoder;
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamResolution;
+import com.github.sarxos.webcam.util.ImageUtils;
+
 import com.amazonaws.kinesisvideo.client.KinesisVideoClient;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSource;
 import com.amazonaws.kinesisvideo.common.exception.KinesisVideoException;
@@ -8,6 +14,9 @@ import com.amazonaws.kinesisvideo.java.client.KinesisVideoJavaClientFactory;
 import com.amazonaws.kinesisvideo.java.mediasource.file.ImageFileMediaSource;
 import com.amazonaws.kinesisvideo.java.mediasource.file.ImageFileMediaSourceConfiguration;
 import com.amazonaws.regions.Regions;
+
+
+
 
 /**
  * Demo Java Producer.
