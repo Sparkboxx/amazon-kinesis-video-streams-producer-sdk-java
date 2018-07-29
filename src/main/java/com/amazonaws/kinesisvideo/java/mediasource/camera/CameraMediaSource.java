@@ -191,7 +191,7 @@ public class CameraMediaSource implements MediaSource {
         return new StreamInfo(VERSION_ZERO,
                 streamName,
                 StreamInfo.StreamingType.STREAMING_TYPE_REALTIME,
-                contentType,
+                "video/h264",
                 NO_KMS_KEY_ID,
                 cameraMediaSourceConfiguration.getRetentionPeriodInHours() * HUNDREDS_OF_NANOS_IN_AN_HOUR,
                 NOT_ADAPTIVE,
