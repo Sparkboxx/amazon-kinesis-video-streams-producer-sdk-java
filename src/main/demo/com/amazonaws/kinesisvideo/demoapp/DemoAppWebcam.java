@@ -22,7 +22,7 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.kinesisvideo.client.KinesisVideoClient;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSource;
-import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceState;
+import com.amazonaws.kinesisvideo.client.mediasource.t MediaSourceState;
 import com.amazonaws.kinesisvideo.common.exception.KinesisVideoException;
 import com.amazonaws.kinesisvideo.demoapp.auth.AuthHelper;
 import com.amazonaws.kinesisvideo.java.client.KinesisVideoJavaClientFactory;
@@ -43,6 +43,7 @@ import com.github.sarxos.webcam.util.ImageUtils;
 public final class DemoAppWebcam {
     private static final String STREAM_NAME = "remotebox";
     private static final int FPS_25 = 25;
+    private static final int FPS_19 = 19;
     private static final String IMAGE_DIR = "src/main/resources/data/h264/";
     // CHECKSTYLE:SUPPRESS:LineLength
     // Need to get key frame configured properly so the output can be decoded. h264 files can be decoded using gstreamer plugin

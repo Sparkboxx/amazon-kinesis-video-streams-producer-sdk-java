@@ -65,11 +65,8 @@ public final class ProducerStreamUtil {
                 + "from media source configuration");
     }
 
-    private static boolean isCameraConfiguration(
-            final MediaSourceConfiguration mediaSourceConfiguration) {
-
-        return CameraMediaSourceConfiguration.class
-                .isAssignableFrom(mediaSourceConfiguration.getClass());
+    private static boolean isCameraConfiguration(final MediaSourceConfiguration mediaSourceConfiguration) {
+        return mediaSourceConfiguration.getClass().getSimpleName().equals("CameraMediaSourceConfiguration");
     }
 
     private static boolean isBytesConfiguration(
@@ -83,47 +80,6 @@ public final class ProducerStreamUtil {
         return mediaSourceConfiguration.getClass().getSimpleName().equals("ImageFileMediaSourceConfiguration");
     }
 
-    private static StreamInfo getCameraStreamInfo(
-            final String streamName,
-            final MediaSourceConfiguration mediaSourceConfiguration) throws KinesisVideoException {
-
-        final CameraMediaSourceConfiguration configuration =
-                (CameraMediaSourceConfiguration) mediaSourceConfiguration;
-
-        // Need to fix-up the content type as the Console playback only accepts video/h264 and will fail
-        // if the mime type is video/avc which is the default in Android.
-        String contentType = configuration.getEncoderMimeType();
-        if (contentType.equals("video/avc")) {
-            contentType = "video/h264";
-        }
-
-        return new StreamInfo(VERSION_ZERO,
-                streamName,
-                StreamInfo.StreamingType.STREAMING_TYPE_REALTIME,
-                contentType,
-                NO_KMS_KEY_ID,
-                configuration.getRetentionPeriodInHours() * HUNDREDS_OF_NANOS_IN_AN_HOUR,
-                NOT_ADAPTIVE,
-                MAX_LATENCY_ZERO,
-                DEFAULT_GOP_DURATION * HUNDREDS_OF_NANOS_IN_A_MILLISECOND,
-                KEYFRAME_FRAGMENTATION,
-                SDK_GENERATES_TIMECODES,
-                configuration.getIsAbsoluteTimecode(),
-                REQUEST_FRAGMENT_ACKS,
-                RECOVER_ON_FAILURE,
-                StreamInfo.codecIdFromContentType(configuration.getEncoderMimeType()),
-                StreamInfo.createTrackName(configuration.getEncoderMimeType()),
-                configuration.getBitRate(),
-                configuration.getFrameRate(),
-                DEFAULT_BUFFER_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
-                DEFAULT_REPLAY_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
-                DEFAULT_STALENESS_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
-                configuration.getTimeScale() / NANOS_IN_A_TIME_UNIT,
-                RECALCULATE_METRICS,
-                configuration.getCodecPrivateData(),
-                getTags(),
-                configuration.getNalAdaptationFlags());
-    }
 
     private static StreamInfo getBytesStreamInfo(final String streamName,
             final MediaSourceConfiguration mediaSourceConfiguration) throws KinesisVideoException {
@@ -157,7 +113,69 @@ public final class ProducerStreamUtil {
                 StreamInfo.NalAdaptationFlags.NAL_ADAPTATION_FLAG_NONE);
     }
 
-    private static StreamInfo getImageFileStreamInfo(final MediaSourceConfiguration configuration,
+    // private static StreamInfo getCameraStreamInfo(
+    //         final String streamName,
+    //         final MediaSourceConfiguration mediaSourceConfiguration) throws KinesisVideoException {
+
+    //     final CameraMediaSourceConfiguration configuration =
+    //             (CameraMediaSourceConfiguration) mediaSourceConfiguration;
+
+    //     // Need to fix-up the content type as the Console playback only accepts video/h264 and will fail
+    //     // if the mime type is video/avc which is the default in Android.
+    //     String contentType = configuration.getEncoderMimeType();
+    //     if (contentType.equals("video/avc")) {
+    //         contentType = "video/h264";
+    //     }
+
+        
+    //     return new StreamInfo(VERSION_ZERO,
+    //             streamName,
+    //             StreamInfo.StreamingType.STREAMING_TYPE_REALTIME,
+    //             contentType,
+    //             NO_KMS_KEY_ID,
+    //             configuration.getRetentionPeriodInHours() * HUNDREDS_OF_NANOS_IN_AN_HOUR,
+    //             NOT_ADAPTIVE,
+    //             MAX_LATENCY_ZERO,
+    //             DEFAULT_GOP_DURATION * HUNDREDS_OF_NANOS_IN_A_MILLISECOND,
+    //             KEYFRAME_FRAGMENTATION,
+    //             SDK_GENERATES_TIMECODES,
+    //             configuration.getIsAbsoluteTimecode(),
+    //             REQUEST_FRAGMENT_ACKS,
+    //             RECOVER_ON_FAILURE,
+    //             StreamInfo.codecIdFromContentType(configuration.getEncoderMimeType()),
+    //             StreamInfo.createTrackName(configuration.getEncoderMimeType()),
+    //             configuration.getBitRate(),
+    //             configuration.getFrameRate(),
+    //             DEFAULT_BUFFER_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
+    //             DEFAULT_REPLAY_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
+    //             DEFAULT_STALENESS_DURATION_IN_SECONDS * HUNDREDS_OF_NANOS_IN_A_SECOND,
+    //             configuration.getTimeScale() / NANOS_IN_A_TIME_UNIT,
+    //             RECALCULATE_METRICS,
+    //             configuration.getCodecPrivateData(),
+    //             getTags(),
+    //             configuration.getNalAdaptationFlags());
+    // }
+
+    // private static StreamInfo getImageFileStreamInfo(final MediaSourceConfiguration configuration,
+    //         final String streamName) throws KinesisVideoException {
+    //     try {
+    //     return (StreamInfo) configuration.getClass().getMethod("toStreamInfo", String.class)
+    //     .invoke(configuration, streamName);
+    //     } catch (final IllegalAccessException e) {
+    //     throw new KinesisVideoException(e);
+    //     } catch (final IllegalArgumentException e) {
+    //     throw new KinesisVideoException(e);
+    //     } catch (final InvocationTargetException e) {
+    //     throw new KinesisVideoException(e);
+    //     } catch (final NoSuchMethodException e) {
+    //     throw new KinesisVideoException(e);
+    //     } catch (final SecurityException e) {
+    //     throw new KinesisVideoException(e);
+    //     }
+    // }
+
+
+    private static StreamInfo getCameraStreamInfo(final MediaSourceConfiguration configuration,
                                                      final String streamName) throws KinesisVideoException {
         try {
             return (StreamInfo) configuration.getClass().getMethod("toStreamInfo", String.class)
