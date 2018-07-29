@@ -1,6 +1,5 @@
 package com.amazonaws.kinesisvideo.util;
 
-import com.amazonaws.kinesisvideo.client.mediasource.CameraMediaSourceConfiguration;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceConfiguration;
 import com.amazonaws.kinesisvideo.common.exception.KinesisVideoException;
 import com.amazonaws.kinesisvideo.mediasource.bytes.BytesMediaSourceConfiguration;

@@ -1,6 +1,5 @@
 package com.amazonaws.kinesisvideo.java.mediasource.camera;
 
-import com.amazonaws.kinesisvideo.client.mediasource.CameraMediaSourceConfiguration;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSource;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceConfiguration;
 import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceSink;

@@ -1,4 +1,4 @@
-package com.amazonaws.kinesisvideo.client.mediasource;
+package com.amazonaws.kinesisvideo.java.mediasource.camera;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 import com.amazonaws.kinesisvideo.producer.StreamInfo;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceConfiguration;
 
 /**
  * CameraMediaSourceConfiguration defines common configuration properties for camera media source

@@ -20,7 +20,8 @@ import org.jcodec.scale.Transform;
 
 import javax.imageio.ImageIO;
 
-import com.amazonaws.kinesisvideo.client.mediasource.CameraMediaSourceConfiguration;
+// import com.amazonaws.kinesisvideo.client.mediasource.CameraMediaSourceConfiguration;
+import com.amazonaws.kinesisvideo.client.mediasource.MediaSourceConfiguration;
 import com.amazonaws.kinesisvideo.mediasource.OnFrameDataAvailable;
 import com.amazonaws.kinesisvideo.stream.throttling.DiscreteTimePeriodsThrottler;
 import com.github.sarxos.webcam.Webcam;
