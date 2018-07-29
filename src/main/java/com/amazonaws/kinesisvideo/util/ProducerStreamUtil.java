@@ -54,7 +54,7 @@ public final class ProducerStreamUtil {
             final MediaSourceConfiguration mediaSourceConfiguration) throws KinesisVideoException {
 
         if (isCameraConfiguration(mediaSourceConfiguration)) {
-            return getCameraStreamInfo(streamName, mediaSourceConfiguration);
+            return getCameraStreamInfo(mediaSourceConfiguration, streamName);
         } else if (isBytesConfiguration(mediaSourceConfiguration)) {
             return getBytesStreamInfo(streamName, mediaSourceConfiguration);
         } else if (isImageFileConfiguration(mediaSourceConfiguration)) {
@@ -156,23 +156,23 @@ public final class ProducerStreamUtil {
     //             configuration.getNalAdaptationFlags());
     // }
 
-    // private static StreamInfo getImageFileStreamInfo(final MediaSourceConfiguration configuration,
-    //         final String streamName) throws KinesisVideoException {
-    //     try {
-    //     return (StreamInfo) configuration.getClass().getMethod("toStreamInfo", String.class)
-    //     .invoke(configuration, streamName);
-    //     } catch (final IllegalAccessException e) {
-    //     throw new KinesisVideoException(e);
-    //     } catch (final IllegalArgumentException e) {
-    //     throw new KinesisVideoException(e);
-    //     } catch (final InvocationTargetException e) {
-    //     throw new KinesisVideoException(e);
-    //     } catch (final NoSuchMethodException e) {
-    //     throw new KinesisVideoException(e);
-    //     } catch (final SecurityException e) {
-    //     throw new KinesisVideoException(e);
-    //     }
-    // }
+    private static StreamInfo getImageFileStreamInfo(final MediaSourceConfiguration configuration,
+            final String streamName) throws KinesisVideoException {
+        try {
+        return (StreamInfo) configuration.getClass().getMethod("toStreamInfo", String.class)
+        .invoke(configuration, streamName);
+        } catch (final IllegalAccessException e) {
+        throw new KinesisVideoException(e);
+        } catch (final IllegalArgumentException e) {
+        throw new KinesisVideoException(e);
+        } catch (final InvocationTargetException e) {
+        throw new KinesisVideoException(e);
+        } catch (final NoSuchMethodException e) {
+        throw new KinesisVideoException(e);
+        } catch (final SecurityException e) {
+        throw new KinesisVideoException(e);
+        }
+    }
 
 
     private static StreamInfo getCameraStreamInfo(final MediaSourceConfiguration configuration,
